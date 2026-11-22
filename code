@@ -1,0 +1,128 @@
+import math
+
+print("============================================")
+print("     Capacitor Bank Sizing Calculator")
+print("============================================")
+
+# -------------------------------------------------
+# INPUTS
+# -------------------------------------------------
+
+# Active power must be greater than 0 kW
+while True:
+    try:
+        active_power = float(input("\nEnter Active Power (kW): "))
+
+        if active_power > 0:
+            break
+        else:
+            print("Active power must be greater than 0 kW.")
+
+    except ValueError:
+        print("Please enter a valid number.")
+
+
+# Existing power factor must be between 0 and 1
+while True:
+    try:
+        existing_pf = float(input("Enter Existing Power Factor: "))
+
+        if 0 < existing_pf <= 1:
+            break
+        else:
+            print("Power factor must be between 0 and 1.")
+
+    except ValueError:
+        print("Please enter a valid number.")
+
+
+# Desired power factor must be greater than existing PF
+while True:
+    try:
+        desired_pf = float(input("Enter Desired Power Factor: "))
+
+        if existing_pf < desired_pf <= 1:
+            break
+        else:
+            print(
+                f"Desired power factor must be greater than "
+                f"{existing_pf} and not more than 1."
+            )
+
+    except ValueError:
+        print("Please enter a valid number.")
+
+
+# -------------------------------------------------
+# DERIVED VALUES
+# -------------------------------------------------
+
+# Calculate power factor angles
+existing_angle = math.acos(existing_pf)
+desired_angle = math.acos(desired_pf)
+
+# Existing Reactive Power
+# Q1 = P × tan(phi1)
+existing_reactive_power = active_power * math.tan(existing_angle)
+
+# Target Reactive Power
+# Q2 = P × tan(phi2)
+target_reactive_power = active_power * math.tan(desired_angle)
+
+# Existing Apparent Power
+# S1 = P / PF1
+existing_apparent_power = active_power / existing_pf
+
+# Target Apparent Power
+# S2 = P / PF2
+target_apparent_power = active_power / desired_pf
+
+
+# -------------------------------------------------
+# FINAL RESULT
+# -------------------------------------------------
+
+# Required capacitor bank size
+# Qc = Q1 - Q2
+capacitor_bank_size = (
+    existing_reactive_power - target_reactive_power
+)
+
+
+# -------------------------------------------------
+# OUTPUT
+# -------------------------------------------------
+
+print("\n============================================")
+print("              DERIVED VALUES")
+print("============================================")
+
+print(
+    f"Existing Reactive Power : "
+    f"{existing_reactive_power:.2f} kVAR"
+)
+
+print(
+    f"Target Reactive Power   : "
+    f"{target_reactive_power:.2f} kVAR"
+)
+
+print(
+    f"Existing Apparent Power : "
+    f"{existing_apparent_power:.2f} kVA"
+)
+
+print(
+    f"Target Apparent Power   : "
+    f"{target_apparent_power:.2f} kVA"
+)
+
+
+print("\n============================================")
+print("               FINAL RESULT")
+print("============================================")
+
+print(
+    f"Required Capacitor Bank Size : "
+    f"{capacitor_bank_size:.2f} kVAR"
+)
